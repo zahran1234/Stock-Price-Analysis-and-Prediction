@@ -14,7 +14,7 @@ def dividends(stock_symbol ,num=6 ):
   ticker = yf.Ticker(stock_symbol)
 
   # Fetch historical data including dividends
-  data = ticker.history(period='3y', actions=True)
+  data = ticker.history(period='7y', actions=True)
 
   # Resample data to hourly intervals
   data_hourly = data.resample('1h').ffill()
