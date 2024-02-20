@@ -3,6 +3,7 @@ import yfinance as yf
 import pandas as pd
 import requests
 import matplotlib.pyplot as plt
+import plotly.express as px
 #from devidents import dividends
 
 ##################################### dividends #############################
@@ -41,8 +42,6 @@ def dividends(stock_symbol ,num=6 ):
     last_dividends_date_list=dividends_date_list[length-num:]
   else:
     last_dividends_date_list=dividends_date_list
-  last_dividends_date_list
-
   data_list=[]
   length=data_hourly.shape[0]
   for i in last_dividends_date_list:
@@ -72,6 +71,13 @@ def get_short_interest(stock_symbol):
             'Short Float': info.get('shortPercentOfFloat', 'N/A'),
             'Reporting Date': info.get('lastShortInterestDate', 'N/A')
         }
+        if short_interest_data['Short Shares'] !="N/A":
+           short_interest_data['Short Shares']= "{:,}".format(short_interest_data['Short Shares']) 
+        if short_interest_data ['Short Float'] != "N/A":
+           short_interest_data ['Short Float']=str(short_interest_data ['Short Float']*100)+"%"
+           
+           
+
 
         return short_interest_data
 
@@ -108,8 +114,29 @@ if short_interest_data:
     print(f"Short Float: {short_interest_data['Short Float']}")
     print(f"Reporting Date: {short_interest_data['Reporting Date']}")
 if submit:
-# Fetch historical stock data
-    # Fetch historical stock data and data prepressing 
+    ticker = yf.Ticker(stock_symbol)
+    # Fetch summary information
+    info = ticker.info
+    # Display the information in the right sidebar
+    st.sidebar.header("Stock Information")
+    st.sidebar.write(f"Company Name: {info.get('longName', 'N/A')}")
+    st.sidebar.write(f"Symbol: {info.get('symbol', 'N/A')}")
+    st.sidebar.write(f"Sector: {info.get('sector', 'N/A')}")
+    st.sidebar.write(f"Country: {info.get('country', 'N/A')}")
+    st.sidebar.write(f"Market Cap: {info.get('marketCap', 'N/A')}")
+
+    st.sidebar.write(f"Current Price: {info.get('regularMarketPrice', 'N/A')}")
+    st.sidebar.write(f"52-Week High: {info.get('fiftyTwoWeekHigh', 'N/A')}")
+    st.sidebar.write(f"52-Week Low: {info.get('fiftyTwoWeekLow', 'N/A')}")
+    st.sidebar.write(f"Dividend Rate: {info.get('dividendRate', 'N/A')}")
+    st.sidebar.write(f"Dividend Yield: {info.get('dividendYield', 'N/A')}")
+
+    st.sidebar.write(f"EPS (Earnings Per Share): {info.get('trailingEps', 'N/A')}")
+
+    st.sidebar.write(f"Short Ratio: {info.get('shortRatio', 'N/A')}")
+    st.sidebar.write(f"Short Shares: {info.get('sharesShort', 'N/A')}")
+    st.sidebar.write(f"Short Percent: {info.get('shortPercentOfFloat', 'N/A')}")
+
     stock_data = yf.download(stock_symbol, start=start_date, end=end_date ,  interval="1m" ,prepost=True )
     stock_data=stock_data.asfreq('1T')
     stock_data=stock_data.fillna(method='ffill')
@@ -120,20 +147,22 @@ if submit:
     st.write(stock_data)
 
      #Display line chart
-    st.subheader("Stock Price Chart")
-    st.line_chart(stock_data[['Open' , 'Close']])
+    #st.subheader("Stock Price Chart")
+    # Define a constant y-axis range
+    constant_y_range = ( stock_data['Low'].min(),stock_data['High'].max())
 
-    # Line Chart with Y-Axis Limit
-    #st.subheader("Line Chart with Y-Axis Limit:")
-    #fig, ax = plt.subplots()
-    #ax.plot(stock_data['Close'], label='close')
-    #ax.plot(stock_data['Open'], label='open')
-    # Set Y-Axis Limit
-    #y_axis_limit = st.slider("Set Y-Axis Limit", min_value=0, max_value=100, value=(0, 100))
-    #ax.set_ylim(y_axis_limit)
 
-    # Display the chart in Streamlit
-    #st.pyplot(fig)
+# Create a line chart using plotly express
+    fig = px.line(stock_data.reset_index(), x='Datetime', y=['Open', 'Close', 'High', 'Low'],
+              title='last weak stock prices ',
+              labels={'Value': 'Y-Axis Label'},
+              color_discrete_map={'Open': 'blue', 'Close': 'green', 'High': 'red', 'Low': 'orange'})
+
+
+    fig.update_yaxes(range=constant_y_range)
+
+    st.plotly_chart(fig, use_container_width=True)
+   
 
 
 
@@ -162,7 +191,16 @@ if submit:
         st.write( dividends_data[len(dividends_data)-i-1].iloc[ 100:].describe())
 
 
-# Replace 'YOUR_API_KEY' with your actual Alpha Vantage API key
+        constant_y_range = ( dividends_data[len(dividends_data)-i-1]['Low'].min(),dividends_data[len(dividends_data)-i-1]['High'].max())
+
+        fig = px.line(dividends_data[len(dividends_data)-i-1].reset_index(), x='index', y=['Open' , 'Close'], title='Line Chart before and after Dividend , Dividend represented by 0 in x-axis ', labels={'Value': 'Y-Axis Label'})
+
+        fig.update_yaxes(range=constant_y_range)
+
+        st.plotly_chart(fig, use_container_width=True)
+       
+
+
     api_key = 'CD82V0YRBKXOVLXZ'
     
 
