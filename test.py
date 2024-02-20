@@ -1,21 +1,19 @@
 import streamlit as st
-import pandas as pd
-import numpy as np
-import plotly.express as px
 
-# Create a sample DataFrame with timestamps in minutes
-data = {'Timestamp': pd.date_range('2022-01-01', periods=100, freq='T'),  # 'T' stands for minutes
-        'Value': np.random.randn(100).cumsum()}
-df = pd.DataFrame(data)
+# Streamlit app title
+st.title("Right Side Content Example")
 
-# Define a constant y-axis range
-constant_y_range = (-10, 10)
+# Create a layout with two columns
+left_column, right_column = st.columns(2)
 
-# Create a line chart using plotly express
-fig = px.line(df, x='Timestamp', y='Value', title='Line Chart with Constant Y-Axis Range', labels={'Value': 'Y-Axis Label'})
+# Write content in the right column
+with right_column:
+    st.header("Right Side Header")
+    st.write("This is content on the right side of the app.")
 
-# Customize y-axis range
-fig.update_yaxes(range=constant_y_range)
+# Write content in the left column
+with left_column:
+    st.header("Left Side Header")
+    st.write("This is content on the left side of the app.")
 
-# Display the chart in Streamlit
-st.plotly_chart(fig, use_container_width=True)
+# You can add more content in each column as needed
