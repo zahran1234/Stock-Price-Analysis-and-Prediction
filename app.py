@@ -42,15 +42,15 @@ if submit:
     display_stock_information(stock_symbol, stock_data['Close'][len(stock_data['Close'].tolist())-1])
     analysis_last_week(stock_data,stock_symbol)
     dividends(stock_symbol=stock_symbol ,num=6) 
-    api_key = 'CD82V0YRBKXOVLXZ'
+    api_key = 'AMNYBKHTP0TTTE1Y'
     
     url = f'https://www.alphavantage.co/query?function=EARNINGS&symbol={stock_symbol}&apikey={api_key}'
 
-    #response = requests.get(url)
-    #earnings_data = response.json()
+    response = requests.get(url)
+    earnings_data = response.json()
 
-    #st.write("Earnings Data:")
-    #st.write(earnings_data)
+    st.write("Earnings Data:")
+    st.write(earnings_data)
 
     
     

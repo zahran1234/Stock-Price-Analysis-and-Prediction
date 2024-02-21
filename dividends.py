@@ -18,7 +18,7 @@ def dividends(stock_symbol ,num=6 ):
   ticker = yf.Ticker(stock_symbol)
 
   # Fetch historical data including dividends
-  data = ticker.history(period='7y', actions=True)
+  data = ticker.history(period='3y', actions=True)
 
   # Resample data to hourly intervals
   data_hourly = data.resample('1h').ffill()
@@ -61,6 +61,8 @@ def dividends(stock_symbol ,num=6 ):
    # Display dividends data as a table
   st.subheader("Dividends Data:")
   dividends_data=data_list
+  if len(data_list)==0:
+      st.write("there is no Dividend ")
   for i in range (len(dividends_data)):
         st.subheader("Dividend : " +str(i+1))
         st.write(dividends_data[len(dividends_data)-i-1])
@@ -156,8 +158,10 @@ def format_large_number(number, percentage=False):
         return f"{number / 1e9:.2f}B"
     elif abs(number) >= 1e6:
         return f"{number / 1e6:.2f}M"
+    
     else:
-        return str(number) 
+        return '{:,}'.format(number) 
+    
     
 
 
@@ -175,7 +179,10 @@ def display_stock_information(stock_symbol , current):
         st.sidebar.write(f"Country: {info.get('country', 'N/A')}")
        
         st.sidebar.write(f"Market Cap: {format_large_number(info.get('marketCap', 'N/A'))}")
-    
+        stock_float = format_large_number(info.get('floatShares', 'N/A'))
+
+        # Display the stock float
+        st.sidebar.write(f"Stock Float for {stock_symbol}: {stock_float}")
         st.sidebar.write(f"Current Price: {current}")
         st.sidebar.write(f"52-Week High: {info.get('fiftyTwoWeekHigh', 'N/A')}")
         st.sidebar.write(f"52-Week Low: {info.get('fiftyTwoWeekLow', 'N/A')}")
