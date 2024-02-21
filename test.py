@@ -17,3 +17,4 @@ with left_column:
     st.write("This is content on the left side of the app.")
 
 # You can add more content in each column as needed
+def last_week_analysis()
