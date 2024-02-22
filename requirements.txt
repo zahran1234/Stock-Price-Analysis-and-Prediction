@@ -8,4 +8,4 @@ seaborn
 numpy 
 keras
 tensorflow
-sklearn
+scikit-learn
