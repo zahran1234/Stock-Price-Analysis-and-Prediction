@@ -21,7 +21,7 @@ st.title("Stock Data App")
 # Sidebar with user input
 st.sidebar.header("User Input")
 # Allow user to input stock symbol
-stock_symbol = st.sidebar.text_input("Enter Stock Symbol", "AAPL")
+stock_symbol = st.sidebar.text_input("Enter Stock Symbol", "GOOG")
 
 # Allow user to input date and time range
 end_date = datetime.now().date()
