@@ -11,6 +11,9 @@ from predication import train_and_predication
 from earnings import earning_show
 pd.options.mode.copy_on_write = True
 
+import os
+
+os.system('echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p')
 
 from dividends import dividends , calculate_average_changes ,get_short_interest , display_stock_information ,analysis_last_week
 
