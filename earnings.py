@@ -92,5 +92,5 @@ def earning_show(stock_symbol):
         fig.update_yaxes(range=constant_y_range )
         #fig.update_layout(height=600, width=800)
         st.plotly_chart(fig, use_container_width=True )
-        st.subheader("statistical analysis for earnings : " +str(eraning_dates[i])
+        st.subheader("statistical analysis for earnings : " +str(eraning_dates[i]))
         st.write( dividends_data[len(dividends_data)-i-1].describe())
