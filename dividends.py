@@ -8,7 +8,6 @@ import plotly.express as px
 import seaborn as sns 
 import plotly.graph_objects as go
 
-
 left_column, right_column = st.columns(2)
 
 def dividends(stock_symbol ,num=6 ):
@@ -18,6 +17,10 @@ def dividends(stock_symbol ,num=6 ):
   ticker = yf.Ticker(stock_symbol)
 
   # Fetch historical data including dividends
+  num_historical_days = len(ticker.history(period='max'))
+  if num_historical_days/365<3:
+      data = ticker.history(period=str(int(num_historical_days/365))+"y", actions=True)
+      
   data = ticker.history(period='3y', actions=True)
 
   # Resample data to hourly intervals
@@ -303,3 +306,4 @@ def analysis_last_week(stock_data,stock_symbol):
         st.table(short_interest_data)
     # Create Ticker object
     ticker = yf.Ticker(stock_symbol)
+#def average_volatility_earing():

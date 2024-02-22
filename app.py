@@ -7,6 +7,10 @@ import plotly.express as px
 import seaborn as sns 
 import plotly.graph_objects as go
 from datetime import datetime, timedelta
+from predication import train_and_predication
+from earnings import earning_show
+pd.options.mode.copy_on_write = True
+
 
 from dividends import dividends , calculate_average_changes ,get_short_interest , display_stock_information ,analysis_last_week
 
@@ -24,6 +28,8 @@ end_date = st.sidebar.date_input("End Date", end_date)
 start_time = st.sidebar.time_input("Start Time", pd.to_datetime('4:00:00'))    
 end_time = st.sidebar.time_input("End Time", pd.to_datetime('17:59:00'))
 submit= st.sidebar.button('submit')
+submit_with_ai= st.sidebar.button('submit with ai ')
+
 #stock_symbol =stock_symbol # Replace with the stock symbol of your choice
 short_interest_data = get_short_interest(stock_symbol)
 
@@ -39,18 +45,33 @@ if submit:
     stock_data=stock_data.asfreq('1T')
     stock_data=stock_data.fillna(method='ffill')
     stock_data=stock_data.between_time(start_time, end_time)
+    
     display_stock_information(stock_symbol, stock_data['Close'][len(stock_data['Close'].tolist())-1])
     analysis_last_week(stock_data,stock_symbol)
     dividends(stock_symbol=stock_symbol ,num=6) 
-    api_key = 'AMNYBKHTP0TTTE1Y'
+    earning_show(stock_symbol)
+    #api_key = 'AMNYBKHTP0TTTE1Y'
     
-    url = f'https://www.alphavantage.co/query?function=EARNINGS&symbol={stock_symbol}&apikey={api_key}'
+    #url = f'https://www.alphavantage.co/query?function=EARNINGS&symbol={stock_symbol}&apikey={api_key}'
 
-    response = requests.get(url)
-    earnings_data = response.json()
+    #response = requests.get(url)
+    #earnings_data = response.json()
 
-    st.write("Earnings Data:")
-    st.write(earnings_data)
+    #st.write("Earnings Data:")
+    #st.write(earnings_data)
+elif submit_with_ai:
+    st.subheader("the next day predication : " +str(train_and_predication(stock_symbol)))
+    
+    stock_data = yf.download(stock_symbol, start=start_date, end=end_date ,  interval="1m" ,prepost=True )
+    stock_data=stock_data.asfreq('1T')
+    stock_data=stock_data.fillna(method='ffill')
+    stock_data=stock_data.between_time(start_time, end_time)
+    display_stock_information(stock_symbol, stock_data['Close'][len(stock_data['Close'].tolist())-1])
+    analysis_last_week(stock_data,stock_symbol)
+    
+    dividends(stock_symbol=stock_symbol ,num=6) 
+    
+
 
     
     
