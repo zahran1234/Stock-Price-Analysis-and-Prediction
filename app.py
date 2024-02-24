@@ -45,14 +45,17 @@ if short_interest_data:
 if submit:
     
     stock_data = yf.download(stock_symbol, start=start_date, end=end_date ,  interval="1m" ,prepost=True )
+    
     stock_data=stock_data.asfreq('1T')
+
     stock_data=stock_data.fillna(method='ffill')
+
     stock_data=stock_data.between_time(start_time, end_time)
     
-    display_stock_information(stock_symbol, stock_data['Close'][len(stock_data['Close'].tolist())-1])
-    analysis_last_week(stock_data,stock_symbol)
-    dividends(stock_symbol=stock_symbol ,num=6) 
-    earning_show(stock_symbol)
+    #display_stock_information(stock_symbol, stock_data['Close'][len(stock_data['Close'].tolist())-1])
+    #analysis_last_week(stock_data,stock_symbol)
+    #dividends(stock_symbol=stock_symbol ,num=6) 
+    #earning_show(stock_symbol)
     #api_key = 'AMNYBKHTP0TTTE1Y'
     
     #url = f'https://www.alphavantage.co/query?function=EARNINGS&symbol={stock_symbol}&apikey={api_key}'
@@ -63,16 +66,23 @@ if submit:
     #st.write("Earnings Data:")
     #st.write(earnings_data)
 elif submit_with_ai:
+
     st.subheader("the next day predication : " +str(train_and_predication(stock_symbol)))
-    
+
     stock_data = yf.download(stock_symbol, start=start_date, end=end_date ,  interval="1m" ,prepost=True )
+
     stock_data=stock_data.asfreq('1T')
+
     stock_data=stock_data.fillna(method='ffill')
+
     stock_data=stock_data.between_time(start_time, end_time)
+
     display_stock_information(stock_symbol, stock_data['Close'][len(stock_data['Close'].tolist())-1])
+
     analysis_last_week(stock_data,stock_symbol)
-    
+
     dividends(stock_symbol=stock_symbol ,num=6) 
+
     
 
 
